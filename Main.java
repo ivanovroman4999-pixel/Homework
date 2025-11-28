@@ -1,55 +1,37 @@
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args){
-        ArrayList<String> list = new ArrayList<>(); 
-        while (true){
-            System.out.println();
-            System.out.println("0. Выход из программы");
-            System.out.println("1. Добавить дело");
-            System.out.println("2. Показать дела");
-            System.out.println("3. Удалить дело по номеру");
-            System.out.println("4. Удалить дело по названию");
-            Scanner scanner = new Scanner(System.in);
-            try {
-            System.out.println("Введите число:");
-            int input = scanner.nextInt();
-                if (input == 0) {
-                break;
-                }
-
-                if (input == 1){
-                    System.out.println("Введите дело:");
-                    String a = scanner.next();
-                    list.add(a);
-                    System.out.println("Дело добавлено!");
-                } 
-
-                if (input == 2 && list != null) {
-                    for(int i = 0; i<list.size(); i++){
-                        System.out.println(i+1 + ". " + list.get(i)); 
-                    }
-                }
-                if (input == 3 && list != null) {
-                    System.out.println("Введите номер: ");
-                    int a = scanner.nextInt();
-                    list.remove(a-1);
-                    System.out.println("Удалено!");   
-                }
-                if (input == 4) {
-                    System.out.println("Введите название дела:");
-                    String a = scanner.next();
-                    for(int i = 0; i< list.size(); i++){
-                        if(list.get(i).equals(a)){
-                            list.remove(i);
-                            System.out.println("Удалено!");   
-                        }
-                    }
-                }
-            } catch(Exception e ){
-                System.out.print(e+ " ОШИБКА");
-            }
+        Address moscow = new Address("Россия", "Москва");
+        Address kazan = new Address("Россия", "Казань");
+        Address spb = new Address("Россия", "Санкт-Петербург");
+        Address berlin = new Address("Германия", "Берлин");
+        Address paris = new Address("Франция", "Париж");
+        Address tokio = new Address("Япония", "Токио");
+        DeliveryService deliveryService = new DeliveryService();
+       try{
+        deliveryService.addAddress(tokio, 50);
+        deliveryService.addAddress(paris, 26);
+        deliveryService.addAddress(berlin, 54);
+        deliveryService.addAddress(spb, 32);
+        deliveryService.addAddress(kazan, 84);
+        deliveryService.addAddress(moscow, 24);
+       } catch (Exception e ){
+        System.out.print(e + "Ошибка в загрузке в мапу");
+       }
+       Scanner scanner = new Scanner(System.in);
+       while (true) {
+        System.out.println("Введите страну или end: ");
+        String country = scanner.next();
+        if (country.equals("end")){
+            break;
         }
+        System.out.println("Введите город: ");
+        String city = scanner.next();
+        System.out.println("Введите вес (кг): ");
+        int weight = scanner.nextInt();
+        deliveryService.processOrder(country, city, weight);
+       }
+       scanner.close();
     }
 }
