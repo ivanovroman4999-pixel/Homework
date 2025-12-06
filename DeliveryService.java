@@ -35,8 +35,8 @@ public class DeliveryService {
 
             uniqueCountriesDelivered.add(orderAddress.getCountry()); 
             
-            System.out.printf("Стоимость доставки составит: %.2f руб.\n", orderCost);
-            System.out.printf("Общая стоимость всех доставок: %.2f руб.\n", totalDeliverySum);
+            System.out.print("Стоимость доставки составит:" + orderCost + " руб.");
+            System.out.print("Общая стоимость всех доставок: " + totalDeliverySum + "руб.");
             System.out.println("Доставки выполнены в " + uniqueCountriesDelivered.size() + " уникальных стран."); 
             return true;
         } else {
