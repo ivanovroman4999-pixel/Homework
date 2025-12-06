@@ -1,35 +1,56 @@
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet; 
+import java.util.InputMismatchException;
 import java.util.Map;
-
+import java.util.Scanner;
+import java.util.Set;
 public class DeliveryService {
-    Map<Address, Integer> costPerAddress = new HashMap<>();
-    ArrayList list = new ArrayList();
-    int totalDeliverySum = 0;
-    int totalAddress = 0;
+    private Map<Address, Double> costPerAddress;
+    private double totalDeliverySum = 0.0; 
+    private Set<String> uniqueCountriesDelivered; 
 
-    public boolean processOrder(String country, String city, int weight) {
-        Address orderAddress = new Address(country, city); // Создаем объект Address для заказа
+    public DeliveryService() {
+        this.costPerAddress = new HashMap<>();
+        this.uniqueCountriesDelivered = new HashSet<>();
+    }
+    public void addOrUpdateDeliveryCost(Address address, double costPerKg) {
+        if (costPerKg < 0) {
+            throw new IllegalArgumentException("Стоимость доставки не может быть отрицательной.");
+        }
+        costPerAddress.put(address, costPerKg);
+        System.out.println("Добавлена/обновлена цена доставки для " + address + ": " + costPerKg + " руб/кг");
+    }
+    public boolean processOrder(String country, String city, double weight) {
+        if (country == null || country.trim().isEmpty() || city == null || city.trim().isEmpty()) {
+            System.out.println("Ошибка: Страна или город не могут быть пустыми.");
+            return false;
+        }
+
+        Address orderAddress = new Address(country, city);
         
         if (costPerAddress.containsKey(orderAddress)) {
-            int costPerKg = costPerAddress.get(orderAddress);
-            int orderCost = costPerKg * weight;
-            totalDeliverySum += orderCost; // Добавляем к общей сумме
-            list.add(orderAddress);
-            System.out.println("Стоимость доставки составит: " + orderCost + " руб");
-            System.out.println("Общая стоимость всех доставок: " + totalDeliverySum + " руб.");
-            if (list.equals(orderAddress)){
-            } else {
-                totalAddress ++; 
-            }
-            System.out.print("Общее количество городов: "+ totalAddress + "городов");
+            double costPerKg = costPerAddress.get(orderAddress);
+            double orderCost = costPerKg * weight;
+            totalDeliverySum += orderCost;
+
+            uniqueCountriesDelivered.add(orderAddress.getCountry()); 
+            
+            System.out.printf("Стоимость доставки составит: %.2f руб.\n", orderCost);
+            System.out.printf("Общая стоимость всех доставок: %.2f руб.\n", totalDeliverySum);
+            System.out.println("Доставки выполнены в " + uniqueCountriesDelivered.size() + " уникальных стран."); 
             return true;
         } else {
             System.out.println("Доставки по этому адресу нет (" + orderAddress + ").");
             return false;
         }
     }
-    public void addAddress(Address address, int costPerKg){
-        costPerAddress.put(address, costPerKg);
+    public double getTotalDeliverySum() {
+        return totalDeliverySum;
+    }
+     public int getUniqueCountriesCount() {
+        return uniqueCountriesDelivered.size();
+    }
+    public Map<Address, Double> getCostPerAddress() {
+        return costPerAddress;
     }
 }
